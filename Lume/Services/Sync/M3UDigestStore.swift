@@ -29,8 +29,9 @@ nonisolated enum M3UDigestStore {
     /// once.
     ///
     /// History: 1 — the original fingerprint. 2 — m3u catch-up columns
-    /// (`tvArchive`, `catchupTypeRaw`, `catchupSource`).
-    static let importerRevision = 2
+    /// (`tvArchive`, `catchupTypeRaw`, `catchupSource`). 3 — per-channel HTTP
+    /// headers (`httpHeadersJSON`).
+    static let importerRevision = 3
 
     static func key(playlistId: UUID) -> String {
         "sync.m3uDigest.\(playlistId.uuidString)"

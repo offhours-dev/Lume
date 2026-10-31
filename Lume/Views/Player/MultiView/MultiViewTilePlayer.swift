@@ -102,10 +102,13 @@ struct MultiViewTilePlayer: View {
         self.role = role
         self.onFailure = onFailure
         let defaults = UserDefaults.standard
-        enginePriority = PlayerEnginePriority.resolve(
-            priorityRaw: defaults.string(forKey: PlayerSettings.enginePriorityKey) ?? "",
-            legacyEngineRaw: defaults.string(forKey: PlayerSettings.engineKey)
-                ?? PlayerEngineKind.defaultValue.rawValue
+        enginePriority = PlayerEnginePriority.playable(
+            PlayerEnginePriority.resolve(
+                priorityRaw: defaults.string(forKey: PlayerSettings.enginePriorityKey) ?? "",
+                legacyEngineRaw: defaults.string(forKey: PlayerSettings.engineKey)
+                    ?? PlayerEngineKind.defaultValue.rawValue
+            ),
+            for: media
         )
     }
 

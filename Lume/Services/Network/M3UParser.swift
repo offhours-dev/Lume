@@ -44,6 +44,8 @@ nonisolated struct M3UEntry {
     /// `catchup-source` template, kept verbatim: it carries `{utc}`-style
     /// placeholders that must be expanded at play time, never at import time.
     var catchupSource: String?
+    /// Headers the channel asks the player to send (`M3UHTTPHeaders`).
+    var httpHeaders: [String: String]?
 }
 
 // MARK: - Parser
@@ -216,6 +218,8 @@ nonisolated enum M3UParser {
         /// Group from a standalone `#EXTGRP:` directive (some providers emit it
         /// instead of, or in addition to, `group-title`).
         var pendingGroup: String?
+        /// Headers from `#EXTVLCOPT` / `#EXTHTTP` lines before the URL.
+        var pendingHeaders: [String: String]?
         var headerDelivered = false
 
         mutating func consume(line: String, onHeader: ((M3UHeader) -> Void)?) -> M3UEntry? {
@@ -228,8 +232,10 @@ nonisolated enum M3UParser {
                 } else if line.hasPrefix("#EXTM3U"), !headerDelivered {
                     headerDelivered = true
                     onHeader?(M3UParser.parseHeader(line))
+                } else if let headers = M3UHTTPHeaders.directive(line) {
+                    pendingHeaders = M3UHTTPHeaders.merged(pendingHeaders, headers)
                 }
-                // Anything else (#EXTVLCOPT, #KODIPROP, comments…) is skipped.
+                // Anything else (other #EXTVLCOPT options, #KODIPROP, comments…) is skipped.
                 return nil
             }
 
@@ -237,13 +243,19 @@ nonisolated enum M3UParser {
             defer {
                 pendingInfo = nil
                 pendingGroup = nil
+                pendingHeaders = nil
             }
+
+            let (line, pipeHeaders) = M3UHTTPHeaders.splitURL(line)
+            let headers = M3UHTTPHeaders.merged(pendingHeaders, pipeHeaders)
 
             guard let info = pendingInfo else {
                 // Plain (non-extended) m3u: a bare URL with no metadata.
                 guard looksLikeURL(line) else { return nil }
                 let fallbackName = URL(string: line)?.deletingPathExtension().lastPathComponent ?? line
-                return M3UEntry(name: fallbackName, url: line, tvgId: nil, logo: nil, group: pendingGroup, type: nil)
+                return M3UEntry(
+                    name: fallbackName, url: line, tvgId: nil, logo: nil, group: pendingGroup, type: nil, httpHeaders: headers
+                )
             }
 
             let name = info.name.isEmpty ? (info.tvgName ?? line) : info.name
@@ -256,7 +268,8 @@ nonisolated enum M3UParser {
                 type: info.type,
                 catchupTypeRaw: info.catchupTypeRaw,
                 catchupDays: info.catchupDays,
-                catchupSource: info.catchupSource
+                catchupSource: info.catchupSource,
+                httpHeaders: headers
             )
         }
 

@@ -138,6 +138,8 @@ extension ContentSyncManager {
         if stream.streamIcon != entry.logo { stream.streamIcon = entry.logo }
         if stream.epgChannelId != entry.tvgId { stream.epgChannelId = entry.tvgId }
         if stream.directURL != entry.url { stream.directURL = entry.url }
+        let headersJSON = LiveStream.encodeHTTPHeaders(entry.httpHeaders)
+        if stream.httpHeadersJSON != headersJSON { stream.httpHeadersJSON = headersJSON }
         if stream.categoryId != categoryId { stream.categoryId = categoryId }
     }
 

@@ -285,7 +285,7 @@ nonisolated extension PlayableMedia {
             contentRef: .live(stream.id),
             channelScope: scope,
             surfScope: surfScope,
-            httpHeaders: authHeaders(for: playlist)
+            httpHeaders: M3UHTTPHeaders.merged(authHeaders(for: playlist), stream.httpHeaders)
         )
     }
 

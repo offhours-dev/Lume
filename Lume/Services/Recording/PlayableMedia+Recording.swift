@@ -46,7 +46,13 @@ nonisolated extension PlayableMedia {
     /// finished, which AVPlayer can't demux (its in-progress HLS is unverified
     /// there too), and needs credential headers, which VLC can only send as
     /// the `?token=` JWT of a password sign-in.
+    ///
+    /// A live channel with headers of its own (an m3u `Referer`, say) can't
+    /// play in VLCKit either: it sends no headers at all.
     var unsupportedEngines: Set<PlayerEngineKind> {
+        if case .live = contentRef, httpHeaders?.isEmpty == false {
+            return [.vlcKit]
+        }
         guard case let .recording(identifier) = contentRef,
               RecordingProgressStore.isDispatcharr(identifier)
         else { return [] }

@@ -69,6 +69,11 @@ final class LiveStream {
     /// playback uses it verbatim instead of building an Xtream URL from
     /// credentials and `streamId` (which is a derived hash for m3u sources).
     var directURL: String?
+    /// Headers an m3u channel asks the player to send (`Referer`, `Origin`,
+    /// `User-Agent`), as a JSON object. A string column rather than a
+    /// dictionary so the store stays lightweight-migratable; read it through
+    /// `httpHeaders`.
+    var httpHeadersJSON: String?
 
     var isFavorite: Bool = false
     var lastWatchedDate: Date?
@@ -126,6 +131,21 @@ extension LiveStream {
     var catchupType: CatchupType? {
         get { CatchupType.parse(catchupTypeRaw) }
         set { catchupTypeRaw = newValue?.rawValue }
+    }
+
+    /// The channel's own HTTP headers from its m3u entry, or `nil`.
+    var httpHeaders: [String: String]? {
+        guard let json = httpHeadersJSON?.data(using: .utf8) else { return nil }
+        return try? JSONDecoder().decode([String: String].self, from: json)
+    }
+
+    /// The stored form of `headers`. Keys are sorted so an unchanged set
+    /// encodes to the same string and the importer's dirty check holds.
+    nonisolated static func encodeHTTPHeaders(_ headers: [String: String]?) -> String? {
+        guard let headers, !headers.isEmpty else { return nil }
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .sortedKeys
+        return (try? encoder.encode(headers)).flatMap { String(data: $0, encoding: .utf8) }
     }
 }
 
