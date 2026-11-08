@@ -1063,13 +1063,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Lume/Lume.entitlements;
-				"CODE_SIGN_ENTITLEMENTS[sdk=appletvos*]" = "Lume/Lume-tvOS.entitlements";
+				"CODE_SIGN_ENTITLEMENTS[sdk=appletvos*]" = "Fork/Lume-tvOS.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=appletvsimulator*]" = "Lume/Lume-tvOS.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=iphoneos*]" = "Lume/Lume-iOS.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Lume/Lume-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 37;
-				DEVELOPMENT_TEAM = CHG45F8MCL;
+				DEVELOPMENT_TEAM = 4C28MFNNPC;
 				ENABLE_APP_SANDBOX = YES;
 				"ENABLE_APP_SANDBOX[sdk=macosx*]" = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1100,7 +1100,7 @@
 				LUME_CLOUD_URL = "https://cloud.getlume.org";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 3.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.bilipp.lume;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.offhours.lume;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -1330,10 +1330,10 @@
 		C6BD5701000000000000E008 /* Sideload */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = LumeTopShelf/LumeTopShelf.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Fork/LumeTopShelf.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 37;
-				DEVELOPMENT_TEAM = CHG45F8MCL;
+				DEVELOPMENT_TEAM = 4C28MFNNPC;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LumeTopShelf/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Lume;
@@ -1342,7 +1342,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 3.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.bilipp.lume.topshelf;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.offhours.lume.topshelf;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
