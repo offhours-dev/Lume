@@ -29,7 +29,8 @@ fi
 APP="$DERIVED/Build/Products/Sideload-appletvos/Lume.app"
 [[ -d "$APP" ]] || { echo "No app at $APP" >&2; exit 1; }
 echo "Built: $APP ($(du -sh "$APP" | cut -f1))"
-codesign -d --entitlements - "$APP" 2>/dev/null | grep -E 'application-identifier|team-identifier' || true
+codesign -d --entitlements :- "$APP" 2>/dev/null | plutil -p - | grep -E 'application-identifier|application-groups' -A1 || true
+security cms -D -i "$APP/embedded.mobileprovision" 2>/dev/null | plutil -extract ExpirationDate raw - | sed 's/^/Profile expires: /' || true
 
 if (( INSTALL )); then
   xcrun devicectl device install app --device "$DEV" "$APP"
